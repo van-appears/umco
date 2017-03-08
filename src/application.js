@@ -1,6 +1,6 @@
 window.onload = function() {
     var updaters = [];
-    var audioCtx = new ( window.audioContext || window.webkitAudioContext )();
+    var audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
 
     function getColourControlledValue( colourObj, colourStr ) {
         switch ( colourStr ) {
