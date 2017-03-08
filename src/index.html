@@ -1,29 +1,29 @@
 <!doctype html>
 <html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="style.css"></link>
-    <script src="camControl.js"></script>
-    <script src="application.js"></script>
-  </head>
-  <body>
-    <video id="video"></video>
-    <div class="wrapper">
-      <div class="display">
-        <canvas id="copy"></canvas>
-        <canvas id="render"></canvas>
-      </div>
-      <div class="controls">
-        <fieldset class="main">
-          <label>Box Colour
-            <select id="box_colour">
-              <option value="average" selected>Average</option>
-              <option value="center">Center pixel</option>
-            </select>
-          </label>
-          <br/>
-          Play will begin when the webcam use is allowed
-        </fieldset>
-      </div>
-    </div>
-  </body>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css"></link>
+        <script src="camControl.js"></script>
+        <script src="application.js"></script>
+    </head>
+    <body>
+        <video id="video"></video>
+        <div class="wrapper">
+            <div class="display">
+                <canvas id="copy"></canvas>
+                <canvas id="render"></canvas>
+            </div>
+            <div class="controls">
+                <fieldset class="main">
+                    <label>Box Colour
+                        <select id="box_colour">
+                            <option value="average" selected>Average</option>
+                            <option value="center">Center pixel</option>
+                        </select>
+                    </label>
+                    <br/>
+                    Play will begin when the webcam use is allowed
+                </fieldset>
+            </div>
+        </div>
+    </body>
 </html>
