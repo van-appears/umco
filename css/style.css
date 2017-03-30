@@ -60,6 +60,12 @@ legend {
     display: inline-block;
 
 }
+.controls fieldset.blank {
+
+    box-shadow: none;
+    background: inherit;
+
+}
 .controls label {
 
     position: relative;

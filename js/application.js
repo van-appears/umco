@@ -211,8 +211,9 @@ window.onload = function() {
 
     function displayControlFieldset( boxIndex ) {
         var boxSelector =
-            ".controls fieldset:nth-of-type(" + ( boxIndex + 2 ) + ")";
+            ".controls fieldset:nth-of-type(" + ( boxIndex + 3 ) + ")";
         var display = document.querySelector( boxSelector );
+        if ( !display ) { display = document.querySelector( ".blank" ); }
         var current = document.querySelector( ".controls fieldset.visible" );
         if ( display !== current ) {
             if ( current ) { current.classList.remove( "visible" ); }
