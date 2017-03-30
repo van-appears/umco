@@ -102,21 +102,25 @@ window.camControl = function( opts, callback ) {
         delete this.running;
     }
 
-    navigator.mediaDevices
-        .getUserMedia( MEDIA_CONSTRAINTS )
-        .then( function( mediaStream ) {
-            video.onloadedmetadata = function() {
-                video.play();
-            };
-            video.srcObject = mediaStream;
-            callback( null, {
-                setCollator: setCollator,
-                start: start,
-                stop: stop
+    if ( navigator.mediaDevices ) {
+        navigator.mediaDevices
+            .getUserMedia( MEDIA_CONSTRAINTS )
+            .then( function( mediaStream ) {
+                video.onloadedmetadata = function() {
+                    video.play();
+                };
+                video.srcObject = mediaStream;
+                callback( null, {
+                    setCollator: setCollator,
+                    start: start,
+                    stop: stop
+                } );
+                onHighlight( 0 );
+            } )
+            .catch( function( err ) {
+                callback( err );
             } );
-            onHighlight( 0 );
-        } )
-        .catch( function( err ) {
-            callback( err );
-        } );
+    } else {
+        callback( new Error( "navigator.mediaDevices not supported" ) );
+    }
 };
