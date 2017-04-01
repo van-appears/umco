@@ -39,6 +39,7 @@ window.onload = function() {
             node.frequency.setTargetAtTime(
                 freq, audioCtx.currentTime, 0.1 );
             node.Q.setTargetAtTime( q, audioCtx.currentTime, 0.1 );
+            node.gain.setTargetAtTime( q, audioCtx.currentTime, 0.1 );
         };
     }
 
@@ -64,14 +65,12 @@ window.onload = function() {
         field.innerHTML = "" +
             "<label>Filter type" +
                 "<select name='type'>" +
-                    "<option value='allpass'>Allpass</option>" +
                     "<option value='bandpass'>Bandpass</option>" +
                     "<option value='highpass' selected>Highpass</option>" +
                     "<option value='highshelf'>Highshelf</option>" +
                     "<option value='lowpass' selected>Lowpass</option>" +
                     "<option value='lowshelf'>Lowshelf</option>" +
                     "<option value='notch'>Notch</option>" +
-                    "<option value='peaking'>Peaking</option>" +
                 "</select>" +
             "</label>";
     }
@@ -89,7 +88,8 @@ window.onload = function() {
         var field = document.createElement( "div" );
         fieldset.appendChild( field );
         field.innerHTML = "" +
-            "<label>Frequency control" +
+            "<label>" +
+                "<span class='flabel'>Cutoff frequency</span>" +
                 "<select name='freqControl'>" +
                     createColourOptions() +
                 "</select>" +
@@ -102,18 +102,47 @@ window.onload = function() {
             "</label>";
     }
 
+    function relabelFilterControls( fieldsetChangeEvt, fieldset ) {
+        var target = fieldsetChangeEvt.target;
+        var qlabel = "Eh?";
+        var flabel = "Eh?";
+        if ( target.name === "type" ) {
+            var label = "Eh?";
+            switch ( target.value ) {
+                case "bandpass":
+                case "notch":
+                    flabel = "Center frequency";
+                    qlabel = "Band width";
+                    break;
+                case "highpass":
+                case "lowpass":
+                    flabel = "Cutoff frequency";
+                    qlabel = "Resonance";
+                    break;
+                case "highshelf":
+                case "lowshelf":
+                    flabel = "Limit frequency";
+                    qlabel = "Boost";
+                    break;
+            }
+            fieldset.querySelector( ".flabel" ).innerHTML = flabel;
+            fieldset.querySelector( ".qlabel" ).innerHTML = qlabel;
+        }
+    }
+
     function createQControlHTML( fieldset ) {
         var field = document.createElement( "div" );
         fieldset.appendChild( field );
         field.innerHTML = "" +
-            "<label>Q control" +
+            "<label>" +
+                "<span class='qlabel'>Resonance</span>" +
                 "<select name='qControl'>" +
                     createColourOptions() +
                 "</select>" +
             "</label>";
     }
 
-    function collect( fieldset ) {
+    function collect( fieldset, listener ) {
         var values = {};
         var inputs = fieldset.querySelectorAll( "input, select" );
         var inputArray = Array.prototype.slice.call( inputs );
@@ -122,6 +151,7 @@ window.onload = function() {
         } );
         fieldset.onchange = function( evt ) {
             values[ evt.target.name ] = evt.target.value;
+            if ( listener ) { listener( evt, fieldset ); }
         };
         return values;
     }
@@ -149,7 +179,7 @@ window.onload = function() {
         createFilterTypeControlHTML( fieldset );
         createFrequencyControlHTML( fieldset, from, to );
         createQControlHTML( fieldset );
-        updaters.push( createFilterUpdater( node, collect( fieldset ) ) );
+        updaters.push( createFilterUpdater( node, collect( fieldset, relabelFilterControls ) ) );
         return node;
     }
 
