@@ -2,7 +2,7 @@
 UserMedia Controlled Oscillations (i.e. browser-based webcam-driven synth)
 
 ### Running
-Checkout the code then open src/index.html in Firefox (>50) or Chrome. Once running this will ask for permissions to use your webcam and the synth will start once this is granted.
+Checkout the code then open index.html in Firefox (>50) or Chrome. Once running this will ask for permissions to use your webcam and the synth will start once this is granted.
 
 The default synth has two oscillator nodes, each connected to a filter node, and then ring modulated together.
 
@@ -18,7 +18,7 @@ Clicking an oscillator node shows the following settings
 * Frequency from, to - the range for the oscillator
 
 Clicking a filter node shows the following settings
-* Filter type - allpass, bandpass, highpass, highshelf, lowpass, lowshelf, notch, peaking
+* Filter type - allpass, bandpass, highpass, highshelf, lowpass, lowshelf, notch
 * Frequency control - the controlling frequency for the filter
 * Frequency from, to - the range for frequency
 * Q - quality factor
