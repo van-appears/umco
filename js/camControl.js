@@ -14,8 +14,6 @@ function camControl( opts ) {
     var sourceCtx = getCanvasContext( selectors.source );
     var targetCtx = getCanvasContext( selectors.target );
     var targetCanvas = document.querySelector( selectors.target );
-    var targetOffsetLeft = targetCanvas.offsetLeft;
-    var targetOffsetTop = targetCanvas.offsetTop;
     var boxHeight = height / opts.rows;
     var boxWidth = width / opts.columns;
     var onChange = opts.onChange || function() {};
@@ -27,8 +25,8 @@ function camControl( opts ) {
     var highlightY = 0;
 
     targetCanvas.onclick = function( evt ) {
-        var clickX = evt.pageX - targetOffsetLeft;
-        var clickY = evt.pageY - targetOffsetTop;
+        var clickX = evt.pageX - targetCanvas.offsetLeft;
+        var clickY = evt.pageY - targetCanvas.offsetTop;
         highlightX = Math.floor( clickX / boxWidth );
         highlightY = Math.floor( clickY / boxHeight );
         onHighlight( highlightX + ( columns * highlightY ) );

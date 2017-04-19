@@ -9,7 +9,6 @@ html, body {
 }
 fieldset, canvas {
 
-    box-shadow: 6px 6px 4px #bbbbbb;
     margin: 4px;
     border: none;
 
@@ -30,7 +29,8 @@ legend {
 
 }
 
-#video {
+#video,
+#copy {
 
     display: none;
 
@@ -42,7 +42,7 @@ legend {
 }
 .controls {
 
-    display: inline-block;
+    display: inline-grid;
     text-align: left;
 
 }
@@ -77,5 +77,25 @@ legend {
 
     position: absolute;
     left: 150px;
+
+}
+
+@media (min-width: 640px) {
+
+    fieldset, canvas {
+
+        box-shadow: 6px 6px 4px #bbbbbb;
+
+    }
+    #copy {
+
+        display: inline;
+
+    }
+    .controls {
+
+        display: inline-block;
+
+    }
 
 }
