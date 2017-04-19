@@ -1,50 +1,37 @@
-window.camControl = function( opts, callback ) {
-    var WIDTH = 300;
-    var HEIGHT = 240;
-    var MEDIA_CONSTRAINTS = {
-        audio: false,
-        video: {
-            width: {
-                ideal: WIDTH
-            },
-            height: {
-                ideal: HEIGHT
-            }
-        }
-    };
+function camControl( opts ) {
+    var height = opts.height;
+    var width = opts.width;
 
     function getCanvasContext( selector ) {
         var canvas = document.querySelector( selector );
-        canvas.width = WIDTH;
-        canvas.height = HEIGHT;
+        canvas.width = width;
+        canvas.height = height;
         return canvas.getContext( "2d" );
     }
 
-    var selectors = opts.selectors,
-        columns = opts.columns || 1,
-        rows = opts.rows || 1,
-        onChange = opts.onChange || function() {},
-        onHighlight = opts.onHighlight || function() {},
-        collator = opts.collator || function() {},
-        interval = opts.interval || 1,
-
-        video = document.querySelector( selectors.video ),
-        sourceCtx = getCanvasContext( selectors.source ),
-        targetCtx = getCanvasContext( selectors.target ),
-        targetCanvas = document.querySelector( selectors.target ),
-        targetOffsetLeft = targetCanvas.offsetLeft,
-        targetOffsetTop = targetCanvas.offsetTop,
-        boxHeight = HEIGHT / opts.rows,
-        boxWidth = WIDTH / columns,
-        highlightX = 0,
-        highlightY = 0;
+    var selectors = opts.selectors;
+    var video = document.querySelector( selectors.video );
+    var sourceCtx = getCanvasContext( selectors.source );
+    var targetCtx = getCanvasContext( selectors.target );
+    var targetCanvas = document.querySelector( selectors.target );
+    var targetOffsetLeft = targetCanvas.offsetLeft;
+    var targetOffsetTop = targetCanvas.offsetTop;
+    var boxHeight = height / opts.rows;
+    var boxWidth = width / opts.columns;
+    var onChange = opts.onChange || function() {};
+    var onHighlight = opts.onHighlight || function() {};
+    var collator = opts.collator || function() {};
+    var columns = opts.columns || 1;
+    var rows = opts.rows || 1;
+    var highlightX = 0;
+    var highlightY = 0;
 
     targetCanvas.onclick = function( evt ) {
         var clickX = evt.pageX - targetOffsetLeft;
         var clickY = evt.pageY - targetOffsetTop;
         highlightX = Math.floor( clickX / boxWidth );
         highlightY = Math.floor( clickY / boxHeight );
-        onHighlight( highlightX + ( rows * highlightY ) );
+        onHighlight( highlightX + ( columns * highlightY ) );
     };
 
     function highlightBox( startX, startY ) {
@@ -89,10 +76,10 @@ window.camControl = function( opts, callback ) {
         collator = useCollator;
     }
 
-    function start() {
+    function start( interval ) {
         if ( this.running ) { return; }
         this.running = setInterval( function() {
-            sourceCtx.drawImage( video, 0, 0, WIDTH, HEIGHT );
+            sourceCtx.drawImage( video, 0, 0, width, height );
             onChange( getColours() );
         }, interval );
     }
@@ -102,25 +89,16 @@ window.camControl = function( opts, callback ) {
         delete this.running;
     }
 
-    if ( navigator.mediaDevices ) {
-        navigator.mediaDevices
-            .getUserMedia( MEDIA_CONSTRAINTS )
-            .then( function( mediaStream ) {
-                video.onloadedmetadata = function() {
-                    video.play();
-                };
-                video.srcObject = mediaStream;
-                callback( null, {
-                    setCollator: setCollator,
-                    start: start,
-                    stop: stop
-                } );
-                onHighlight( 0 );
-            } )
-            .catch( function( err ) {
-                callback( err );
-            } );
-    } else {
-        callback( new Error( "navigator.mediaDevices not supported" ) );
-    }
+    video.srcObject = opts.mediaStream;
+    video.onloadedmetadata = function() {
+        video.play();
+        video.muted = true;
+    };
+    onHighlight( 0 );
+
+    return {
+        setCollator: setCollator,
+        start: start,
+        stop: stop
+    };
 };

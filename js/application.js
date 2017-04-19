@@ -1,4 +1,4 @@
-window.onload = function() {
+function application() {
     var updaters = [];
     var audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
 
@@ -18,12 +18,12 @@ window.onload = function() {
         return function( colour ) {
             var scale = getColourControlledValue( colour, values.freqControl );
             var from = parseFloat( values.freqFrom ) || 1;
-            var to = parseFloat( values.freqTo ) || 1000;
+            var to = parseFloat( values.freqTo ) || 1;
             var freq = from * Math.pow( to / from, scale );
 
             if ( node.type !== values.type ) { node.type = values.type; }
             node.frequency.setTargetAtTime(
-                freq, audioCtx.currentTime + 0.05, 0.1 );
+                freq, audioCtx.currentTime, 0.1 );
         };
     }
 
@@ -32,7 +32,7 @@ window.onload = function() {
             var q = getColourControlledValue( colour, values.q );
             var scale = getColourControlledValue( colour, values.freqControl );
             var from = parseFloat( values.freqFrom ) || 1;
-            var to = parseFloat( values.freqTo ) || 1000;
+            var to = parseFloat( values.freqTo ) || 1;
             var freq = from * Math.pow( to / from, scale );
 
             if ( node.type !== values.type ) { node.type = values.type; }
@@ -199,13 +199,9 @@ window.onload = function() {
         filter2.connect( ringGain.gain );
         ringGain.connect( audioCtx.destination );
 
-        // return the starter function
-        return {
-            start: function() {
-                osc1.start();
-                osc2.start();
-            }
-        };
+        // and begin
+        osc1.start();
+        osc2.start();
     }
 
     function avgColourCollator( data ) {
@@ -233,13 +229,13 @@ window.onload = function() {
         };
     }
 
-    function updateSynths( colours ) {
+    function onChange( colours ) {
         updaters.forEach( function( updater, index ) {
             updater( colours[ index ] );
         } );
     }
 
-    function displayControlFieldset( boxIndex ) {
+    function onHighlight( boxIndex ) {
         var boxSelector =
             ".controls fieldset:nth-of-type(" + ( boxIndex + 3 ) + ")";
         var display = document.querySelector( boxSelector );
@@ -251,7 +247,8 @@ window.onload = function() {
         }
     }
 
-    function attachToCamControl( controller ) {
+    function setController( controller ) {
+        controller.setCollator( avgColourCollator );
         document.querySelector( "#box_colour" ).onchange = function( evt ) {
             if ( evt.target.value === "average" ) {
                 controller.setCollator( avgColourCollator );
@@ -259,39 +256,16 @@ window.onload = function() {
                 controller.setCollator( centreColourCollator );
             }
         };
+        controller.start( 1000 / 25 );
     }
 
-    try {
-        var graphControl = setupAudio();
-        var updaterCount = updaters.length;
-        var columns = Math.ceil( Math.sqrt( updaterCount ) );
-        var rows = Math.ceil( updaterCount / columns );
-        var contollerOpts = {
-            interval: 1000 / 25,
-            columns: columns,
-            rows: rows,
-            onHighlight: displayControlFieldset,
-            onChange: updateSynths,
-            collator: avgColourCollator,
-            selectors: {
-                video: "#video",
-                source: "#copy",
-                target: "#render"
-            }
-        };
-
-        window.camControl( contollerOpts, function( err, controller ) {
-            if ( err ) {
-                console.log( err );
-                alert( "Unable to connect to webcam" );
-            } else {
-                attachToCamControl( controller );
-                controller.start();
-                graphControl.start();
-            }
-        } );
-    } catch ( err ) {
-        console.log( err );
-        alert( "Unable to set up audio graph" );
-    }
+    var graphControl = setupAudio();
+    return {
+        getControllableNodeCount: function() {
+            return updaters.length;
+        },
+        onChange: onChange,
+        onHighlight: onHighlight,
+        setController: setController
+    };
 };
