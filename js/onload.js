@@ -24,7 +24,13 @@ window.onload = function() {
             .then( function( mediaStream ) {
                 var app = application( mediaStream );
                 var nodes = app.getControllableNodeCount();
-                var rows = Math.ceil( Math.sqrt( nodes ) );
+                var rows = /(?:&|\?)rows=([0-9]+)/.exec( location.href );
+                if ( rows ) {
+                    rows = rows[ 1 ];
+                }
+                if ( !rows || rows <= 0 ) {
+                    rows = Math.ceil( Math.sqrt( nodes ) );
+                }
                 var columns = Math.ceil( nodes / rows );
 
                 var opts = {
