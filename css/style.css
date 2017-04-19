@@ -9,6 +9,7 @@ html, body {
 }
 fieldset, canvas {
 
+    box-shadow: 6px 6px 4px #bbbbbb;
     margin: 4px;
     border: none;
 
@@ -82,11 +83,6 @@ legend {
 
 @media (min-width: 640px) {
 
-    fieldset, canvas {
-
-        box-shadow: 6px 6px 4px #bbbbbb;
-
-    }
     #copy {
 
         display: inline;
