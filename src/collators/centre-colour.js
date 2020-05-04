@@ -5,6 +5,6 @@ module.exports = function centreColourCollator(data) {
   return {
     r: data.data[i],
     g: data.data[i + 1],
-    b: data.data[i + 2],
+    b: data.data[i + 2]
   };
 };

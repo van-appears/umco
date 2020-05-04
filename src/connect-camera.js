@@ -3,12 +3,12 @@ module.exports = function connectCamera(opts, callback) {
     audio: false,
     video: {
       width: {
-        ideal: opts.width,
+        ideal: opts.width
       },
       height: {
-        ideal: opts.height,
-      },
-    },
+        ideal: opts.height
+      }
+    }
   };
 
   if (navigator.mediaDevices) {

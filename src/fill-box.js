@@ -3,7 +3,7 @@ module.exports = function fillBox(targetCtx, opts) {
   const boxWidth = width / columns;
   const boxHeight = height / rows;
 
-  return (boxColours) => {
+  return boxColours => {
     for (let boxY = 0; boxY < rows; boxY++) {
       for (let boxX = 0; boxX < columns; boxX++) {
         const startX = boxX * boxWidth;

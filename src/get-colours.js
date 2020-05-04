@@ -3,7 +3,7 @@ module.exports = function getColours(sourceCtx, opts) {
   const boxWidth = width / columns;
   const boxHeight = height / rows;
 
-  return (collator) => {
+  return collator => {
     const boxColours = new Array(rows * columns);
     for (let boxY = 0; boxY < rows; boxY++) {
       for (let boxX = 0; boxX < columns; boxX++) {

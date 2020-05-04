@@ -1,5 +1,6 @@
 const createAudioGraph = require("./create-audio-graph");
 const connectCamera = require("./connect-camera");
+const connectListeners = require("./connect-listeners");
 const canvasContext = require("./canvas-context");
 const getColoursFactory = require("./get-colours");
 const fillBoxFactory = require("./fill-box");
@@ -27,6 +28,7 @@ window.onload = function () {
       const getColours = getColoursFactory(sourceCtx, opts);
       const fillBox = fillBoxFactory(targetCtx, opts);
       const updateAudioGraph = updateAudioGraphFactory(audioGraph, opts);
+      connectListeners(opts);
       audioGraph.start();
 
       this.running = setInterval(function () {

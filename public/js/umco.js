@@ -1,25 +1,29 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-var createAudioGraph = require('./create-audio-graph');
+var createAudioGraph = require("./create-audio-graph");
 
-var connectCamera = require('./connect-camera');
+var connectCamera = require("./connect-camera");
 
-var canvasContext = require('./canvas-context');
+var connectListeners = require("./connect-listeners");
 
-var getColoursFactory = require('./get-colours');
+var canvasContext = require("./canvas-context");
 
-var fillBoxFactory = require('./fill-box');
+var getColoursFactory = require("./get-colours");
 
-var graphUpdaterFactory = require('./graph-updater');
+var fillBoxFactory = require("./fill-box");
 
-var avgColourCollator = require('./collators/avg-colour');
+var updateAudioGraphFactory = require("./update-audio-graph");
+
+var avgColourCollator = require("./collators/avg-colour");
 
 var opts = {
   width: 300,
   height: 300,
   rows: 3,
-  columns: 3
+  columns: 3,
+  waveform: "square",
+  filter: "bandpass"
 };
 
 window.onload = function () {
@@ -27,24 +31,25 @@ window.onload = function () {
     if (err) {// TODO
     } else {
       document.body.className = "started";
-      var audioGraph = createAudioGraph();
+      var audioGraph = createAudioGraph(opts);
       var sourceCtx = canvasContext("#copy", opts);
       var targetCtx = canvasContext("#target", opts);
       var getColours = getColoursFactory(sourceCtx, opts);
       var fillBox = fillBoxFactory(targetCtx, opts);
-      var graphUpdater = graphUpdaterFactory(audioGraph);
+      var updateAudioGraph = updateAudioGraphFactory(audioGraph, opts);
+      connectListeners(opts);
       audioGraph.start();
       this.running = setInterval(function () {
         sourceCtx.drawImage(video, 0, 0, opts.width, opts.height);
         var colours = getColours(avgColourCollator);
         fillBox(colours);
-        graphUpdater(colours);
+        updateAudioGraph(colours);
       }, 40);
     }
   });
 };
 
-},{"./canvas-context":2,"./collators/avg-colour":3,"./connect-camera":4,"./create-audio-graph":5,"./fill-box":6,"./get-colours":7,"./graph-updater":8}],2:[function(require,module,exports){
+},{"./canvas-context":2,"./collators/avg-colour":3,"./connect-camera":4,"./connect-listeners":5,"./create-audio-graph":6,"./fill-box":7,"./get-colours":8,"./update-audio-graph":9}],2:[function(require,module,exports){
 "use strict";
 
 module.exports = function (selector, opts) {
@@ -119,7 +124,37 @@ module.exports = function connectCamera(opts, callback) {
 },{}],5:[function(require,module,exports){
 "use strict";
 
-module.exports = function createAudioGraph() {
+module.exports = function connectListeners(opts) {
+  function filterTypeChange(evt) {
+    opts.filter = evt.target.value;
+  }
+
+  function oscillatorTypeChange(evt) {
+    opts.waveform = evt.target.value;
+  }
+
+  var oscillatorTypeRadios = document.querySelectorAll('input[name="oscillatorType"]');
+
+  for (var i = 0; i < oscillatorTypeRadios.length; i++) {
+    oscillatorTypeRadios[i].onclick = oscillatorTypeChange;
+  }
+
+  oscillatorTypeRadios[0].click();
+  var filterTypeRadios = document.querySelectorAll('input[name="filterType"]');
+
+  for (var _i = 0; _i < filterTypeRadios.length; _i++) {
+    filterTypeRadios[_i].onclick = filterTypeChange;
+  }
+
+  filterTypeRadios[0].click();
+};
+
+},{}],6:[function(require,module,exports){
+"use strict";
+
+module.exports = function createAudioGraph(opts) {
+  var waveform = opts.waveform,
+      filter = opts.filter;
   var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   var oscillators = new Array(9);
   var filters = new Array(9);
@@ -127,9 +162,9 @@ module.exports = function createAudioGraph() {
 
   for (var index = 0; index < 9; index++) {
     oscillators[index] = audioCtx.createOscillator();
-    oscillators[index].type = "square";
+    oscillators[index].type = waveform;
     filters[index] = audioCtx.createBiquadFilter();
-    filters[index].type = "bandpass";
+    filters[index].type = filter;
     gains[index] = audioCtx.createGain();
     oscillators[index].connect(filters[index]);
     filters[index].connect(gains[index]);
@@ -151,7 +186,7 @@ module.exports = function createAudioGraph() {
   };
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 module.exports = function fillBox(targetCtx, opts) {
@@ -167,10 +202,11 @@ module.exports = function fillBox(targetCtx, opts) {
         var startX = boxX * boxWidth;
         var startY = boxY * boxHeight;
         var colour = boxColours[rows * boxY + boxX];
-        var r = Math.floor(colour.r);
-        var g = Math.floor(colour.g);
-        var b = Math.floor(colour.b);
-        targetCtx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        var r = colour.r,
+            g = colour.g,
+            b = colour.b;
+        var rgb = "rgb(".concat(Math.floor(r), ",").concat(Math.floor(g), ",").concat(Math.floor(b), ")");
+        targetCtx.fillStyle = rgb;
         targetCtx.fillRect(startX, startY, boxWidth, boxHeight);
         targetCtx.fill();
       }
@@ -178,7 +214,7 @@ module.exports = function fillBox(targetCtx, opts) {
   };
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 module.exports = function getColours(sourceCtx, opts) {
@@ -205,7 +241,7 @@ module.exports = function getColours(sourceCtx, opts) {
   };
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 function scale(colour) {
@@ -225,7 +261,7 @@ function q(colour) {
   return 0.5 + colour / 512;
 }
 
-module.exports = function (audioGraph) {
+module.exports = function (audioGraph, opts) {
   var audioCtx = audioGraph.audioCtx,
       oscillators = audioGraph.oscillators,
       filters = audioGraph.filters;
@@ -236,7 +272,17 @@ module.exports = function (audioGraph) {
           b = colour.b;
       var x = index % 3;
       var y = Math.floor(index / 3);
+
+      if (oscillators[index].type !== opts.waveform) {
+        oscillators[index].type = opts.waveform;
+      }
+
       oscillators[index].frequency.setTargetAtTime(oscFreq(r, x), audioCtx.currentTime, 0.1);
+
+      if (filters[index].type !== opts.filter) {
+        filters[index].type = opts.filter;
+      }
+
       filters[index].frequency.setTargetAtTime(cutoffFreq(g), audioCtx.currentTime, 0.1);
       filters[index].Q.setTargetAtTime(q(b), audioCtx.currentTime, 0.1);
     });

@@ -1,5 +1,5 @@
 module.exports = function createAudioGraph(opts) {
-  const {waveform, filter} = opts;
+  const { waveform, filter } = opts;
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillators = new Array(9);
   const filters = new Array(9);
@@ -27,6 +27,6 @@ module.exports = function createAudioGraph(opts) {
     oscillators,
     filters,
     gains,
-    start,
+    start
   };
 };
