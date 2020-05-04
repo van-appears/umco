@@ -12,23 +12,28 @@ function cutoffFreq(colour) {
 }
 
 function q(colour) {
-  return 0.5 + (colour / 512);
+  return 0.5 + colour / 512;
 }
 
-module.exports = function(audioGraph) {
-  const {audioCtx, oscillators, filters} = audioGraph;
-  return colours => {
+module.exports = function (audioGraph) {
+  const { audioCtx, oscillators, filters } = audioGraph;
+  return (colours) => {
     colours.forEach((colour, index) => {
-      const {r, g, b} = colour;
+      const { r, g, b } = colour;
       const x = index % 3;
       const y = Math.floor(index / 3);
 
       oscillators[index].frequency.setTargetAtTime(
-        oscFreq(r, x), audioCtx.currentTime, 0.1);
+        oscFreq(r, x),
+        audioCtx.currentTime,
+        0.1
+      );
       filters[index].frequency.setTargetAtTime(
-        cutoffFreq(g), audioCtx.currentTime, 0.1);
-      filters[index].Q.setTargetAtTime(
-        q(b), audioCtx.currentTime, 0.1);
+        cutoffFreq(g),
+        audioCtx.currentTime,
+        0.1
+      );
+      filters[index].Q.setTargetAtTime(q(b), audioCtx.currentTime, 0.1);
     });
   };
 };

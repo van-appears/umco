@@ -1,10 +1,10 @@
-module.exports = centreColourCollator( data ) {
-    var dataPerPixel = 4;
-    var length = data.data.length;
-    var i = Math.floor( ( length / dataPerPixel ) / 2 ) * dataPerPixel;
-    return {
-        r: data.data[ i ],
-        g: data.data[ i + 1 ],
-        b: data.data[ i + 2 ]
-    };
-}
+module.exports = function centreColourCollator(data) {
+  const dataPerPixel = 4;
+  const length = data.data.length;
+  const i = Math.floor(length / dataPerPixel / 2) * dataPerPixel;
+  return {
+    r: data.data[i],
+    g: data.data[i + 1],
+    b: data.data[i + 2],
+  };
+};

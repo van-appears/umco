@@ -4,7 +4,8 @@
   "description": "Webcam controlled synth",
   "main": "server.js",
   "scripts": {
-    "build": "node_modules/.bin/browserify -e src/app.js -o public/js/umco.js"
+    "build": "node_modules/.bin/browserify -e src/app.js -o public/js/umco.js -t [ babelify --presets [ @babel/preset-env ] ]",
+    "prettier": "node_modules/.bin/prettier --write server.js src/**"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,10 @@
   },
   "homepage": "https://github.com/van-appears/umco#readme",
   "devDependencies": {
-    "browserify": "^14.5.0"
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "babelify": "^10.0.0",
+    "browserify": "^14.5.0",
+    "prettier": "^2.0.5"
   }
 }

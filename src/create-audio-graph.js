@@ -1,9 +1,9 @@
-module.exports = function createAudioGraph () {
-  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  var oscillators = new Array(9);
-  var filters = new Array(9);
-  var gains = new Array(9);
-  for (var index=0; index<9; index++) {
+module.exports = function createAudioGraph() {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillators = new Array(9);
+  const filters = new Array(9);
+  const gains = new Array(9);
+  for (let index = 0; index < 9; index++) {
     oscillators[index] = audioCtx.createOscillator();
     oscillators[index].type = "square";
     filters[index] = audioCtx.createBiquadFilter();
@@ -16,16 +16,16 @@ module.exports = function createAudioGraph () {
   }
 
   function start() {
-    oscillators.forEach(function(oscillator) {
+    oscillators.forEach(function (oscillator) {
       oscillator.start();
     });
   }
 
   return {
-    audioCtx: audioCtx,
-    oscillators: oscillators,
-    filters: filters,
-    gains: gains,
-    start: start
+    audioCtx,
+    oscillators,
+    filters,
+    gains,
+    start,
   };
-}
+};
