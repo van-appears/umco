@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Umco</title>
+    <link href="css/umco.css" rel="stylesheet"/>
+    <script src="js/umco.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head>
+  <body>
+    <video id="video"></video>
+    <div class="display">
+      <canvas id="copy"></canvas>
+      <canvas id="target"></canvas>
+    </div>
+    <div class="info">
+      Play will begin when the webcam use is allowed
+    </div>
+    <div class="controls">
+      <div class="oscillatorControls">
+        <input id="sine" type="radio" name="oscillatorType" value="sine"/>
+        <label for="sine" title="Sine"></label>
+        <input id="sawtooth" type="radio" name="oscillatorType" value="sawtooth"/>
+        <label for="sawtooth" title="Sawtooth"></label>
+        <input id="triangle" type="radio" name="oscillatorType" value="triangle"/>
+        <label for="triangle" title="Triangle"></label>
+        <input id="square" type="radio" name="oscillatorType" value="square"/>
+        <label for="square" title="Square"></label>
+      </div>
+      <div class="filterControls">
+        <input id="allpass" type="radio" name="filterType" value="allpass"/>
+        <label for="allpass" title="None"></label>
+        <input id="lowpass" type="radio" name="filterType" value="lowpass"/>
+        <label for="lowpass" title="Low pass"></label>
+        <input id="highpass" type="radio" name="filterType" value="highpass"/>
+        <label for="highpass" title="High pass"></label>
+        <input id="bandpass" type="radio" name="filterType" value="bandpass"/>
+        <label for="bandpass" title="Band pass"></label>
+      </div>
+      <div class="ringModControls">
+        <input id="off" type="radio" name="ringMod" value="off"/>
+        <label for="off" title="None"></label>
+        <input id="row" type="radio" name="ringMod" value="row"/>
+        <label for="row" title="Row"></label>
+        <input id="column" type="radio" name="ringMod" value="column"/>
+        <label for="column" title="Column"></label>
+      </div>
+    </div>
+  </body>
+</html>

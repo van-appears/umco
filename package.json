@@ -1,0 +1,25 @@
+{
+  "name": "umco",
+  "version": "1.0.0",
+  "description": "Webcam controlled synth",
+  "main": "server.js",
+  "scripts": {
+    "build": "node_modules/.bin/browserify -e src/app.js -o public/js/umco.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/van-appears/umco.git"
+  },
+  "keywords": [
+    "webaudioapi"
+  ],
+  "author": "Van Appears",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/van-appears/umco/issues"
+  },
+  "homepage": "https://github.com/van-appears/umco#readme",
+  "devDependencies": {
+    "browserify": "^14.5.0"
+  }
+}
