@@ -15,7 +15,7 @@ function q(colour) {
   return 0.5 + colour / 512;
 }
 
-module.exports = function (audioGraph) {
+module.exports = function (audioGraph, opts) {
   const { audioCtx, oscillators, filters } = audioGraph;
   return (colours) => {
     colours.forEach((colour, index) => {

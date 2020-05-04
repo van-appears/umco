@@ -3,7 +3,7 @@ const connectCamera = require("./connect-camera");
 const canvasContext = require("./canvas-context");
 const getColoursFactory = require("./get-colours");
 const fillBoxFactory = require("./fill-box");
-const graphUpdaterFactory = require("./graph-updater");
+const updateAudioGraphFactory = require("./update-audio-graph");
 const avgColourCollator = require("./collators/avg-colour");
 
 const opts = {
@@ -11,6 +11,8 @@ const opts = {
   height: 300,
   rows: 3,
   columns: 3,
+  waveform: "square",
+  filter: "bandpass"
 };
 
 window.onload = function () {
@@ -19,19 +21,19 @@ window.onload = function () {
       // TODO
     } else {
       document.body.className = "started";
-      const audioGraph = createAudioGraph();
+      const audioGraph = createAudioGraph(opts);
       const sourceCtx = canvasContext("#copy", opts);
       const targetCtx = canvasContext("#target", opts);
       const getColours = getColoursFactory(sourceCtx, opts);
       const fillBox = fillBoxFactory(targetCtx, opts);
-      const graphUpdater = graphUpdaterFactory(audioGraph);
+      const updateAudioGraph = updateAudioGraphFactory(audioGraph, opts);
       audioGraph.start();
 
       this.running = setInterval(function () {
         sourceCtx.drawImage(video, 0, 0, opts.width, opts.height);
         const colours = getColours(avgColourCollator);
         fillBox(colours);
-        graphUpdater(colours);
+        updateAudioGraph(colours);
       }, 40);
     }
   });

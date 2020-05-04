@@ -1,13 +1,14 @@
-module.exports = function createAudioGraph() {
+module.exports = function createAudioGraph(opts) {
+  const {waveform, filter} = opts;
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillators = new Array(9);
   const filters = new Array(9);
   const gains = new Array(9);
   for (let index = 0; index < 9; index++) {
     oscillators[index] = audioCtx.createOscillator();
-    oscillators[index].type = "square";
+    oscillators[index].type = waveform;
     filters[index] = audioCtx.createBiquadFilter();
-    filters[index].type = "bandpass";
+    filters[index].type = filter;
     gains[index] = audioCtx.createGain();
 
     oscillators[index].connect(filters[index]);
