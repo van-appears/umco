@@ -26,6 +26,7 @@ body {
 
 .controls,
 .started .info,
+button,
 input[ type='radio' ] {
   display: none;
 }
@@ -34,6 +35,7 @@ input[ type='radio' ] {
   display: inline;
 }
 
+button + label,
 input[ type='radio' ] + label {
   border-radius: 3px;
   border-style: solid;
@@ -52,11 +54,107 @@ label {
   background-repeat: no-repeat;
 }
 
-label[ for='gain' ] {
+#oscillatorColour[value="red"] + label {
+  background-position: 0 0;
+}
+
+#oscillatorColour[value="green"] + label {
+  background-position: -32px 0;
+}
+
+#oscillatorColour[value="blue"] + label {
   background-position: -64px 0;
 }
 
-label[ for='filterFrequency' ] {
+#filterColour[value="red"] + label {
+  background-position: 0 -32px;
+}
+
+#filterColour[value="green"] + label {
+  background-position: -32px -32px;
+}
+
+#filterColour[value="blue"] + label {
+  background-position: -64px -32px;
+}
+
+#resonanceColour[value="red"] + label {
+  background-position: -96px 0;
+}
+
+#resonanceColour[value="green"] + label {
+  background-position: -128px 0;
+}
+
+#resonanceColour[value="blue"] + label {
+  background-position: -160px 0;
+}
+
+#ringMod[value="off"] + label {
+  background-position: -96px -32px;
+}
+
+#ringMod[value="horizontal"] + label {
+  background-position: -128px -32px;
+}
+
+#ringMod[value="vertical"] + label {
+  background-position: -160px -32px;
+}
+
+#collator[value="avg"] + label {
+  background-position: -480px 0;
+}
+
+#collator[value="centre"] + label {
+  background-position: -480px -32px;
+}
+
+#pitchRow[value="off"] + label {
+  background-position: -512px 0;
+}
+
+#pitchRow[value="on"] + label {
+  background-position: -512px -32px;
+}
+
+#connected[value="off"] + label {
+  background-position: -448px 0;
+}
+
+#connected[value="on"] + label {
+  background-position: -448px -32px;
+}
+
+label[ for='filter' ] {
+  background-position: 0 -32px;
+}
+
+label[ for='resonance' ] {
+  background-position: -96px 0;
+}
+
+label[ for='offRingMod' ] {
+  background-position: -96px 0;
+}
+
+label[ for='horizontalRingMod' ] {
+  background-position: -96px 0;
+}
+
+label[ for='verticalRingMod' ] {
+  background-position: -96px 0;
+}
+
+label[ for='collator' ] {
+  background-position: -96px 0;
+}
+
+label[ for='pitchRow' ] {
+  background-position: -96px 0;
+}
+
+label[ for='connected' ] {
   background-position: -96px 0;
 }
 
@@ -91,6 +189,9 @@ label[ for='lowpass' ] {
 label[ for='bandpass' ] {
   background-position: -416px 0;
 }
+
+
+
 
 input[ type='radio' ]:checked + label {
   background-position-y: -32px;

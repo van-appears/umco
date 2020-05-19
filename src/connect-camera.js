@@ -1,12 +1,13 @@
-module.exports = function connectCamera(opts, callback) {
+const { width, height } = require("./constants");
+module.exports = function connectCamera(callback) {
   const MEDIA_CONSTRAINTS = {
     audio: false,
     video: {
       width: {
-        ideal: opts.width
+        ideal: width
       },
       height: {
-        ideal: opts.height
+        ideal: height
       }
     }
   };

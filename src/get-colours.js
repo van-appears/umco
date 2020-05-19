@@ -1,14 +1,18 @@
-module.exports = function getColours(sourceCtx, opts) {
-  const { rows, columns, width, height } = opts;
+const { rows, columns, total, width, height, asIndex } = require("./constants");
+const canvasContext = require("./canvas-context");
+
+module.exports = function getColours(sourceSelector, video) {
+  const sourceCtx = canvasContext(sourceSelector);
   const boxWidth = width / columns;
   const boxHeight = height / rows;
 
   return collator => {
-    const boxColours = new Array(rows * columns);
-    for (let boxY = 0; boxY < rows; boxY++) {
-      for (let boxX = 0; boxX < columns; boxX++) {
-        const startX = boxX * boxWidth;
-        const startY = boxY * boxHeight;
+    sourceCtx.drawImage(video, 0, 0, width, height);
+    const boxColours = new Array(total);
+    for (let row = 0; row < rows; boxY++) {
+      for (let col = 0; col < columns; boxX++) {
+        const startX = col * boxWidth;
+        const startY = row * boxHeight;
         const data = sourceCtx.getImageData(
           startX,
           startY,
@@ -16,7 +20,7 @@ module.exports = function getColours(sourceCtx, opts) {
           boxHeight
         );
         const collatedColour = collator(data);
-        boxColours[rows * boxY + boxX] = collatedColour;
+        boxColours[asIndex(row, col)] = collatedColour;
       }
     }
     return boxColours;

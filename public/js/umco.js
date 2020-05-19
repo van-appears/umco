@@ -7,61 +7,65 @@ var connectCamera = require("./connect-camera");
 
 var connectListeners = require("./connect-listeners");
 
-var canvasContext = require("./canvas-context");
-
 var getColoursFactory = require("./get-colours");
 
 var fillBoxFactory = require("./fill-box");
 
 var updateAudioGraphFactory = require("./update-audio-graph");
 
-var avgColourCollator = require("./collators/avg-colour");
+var _require = require("./collators"),
+    avgColour = _require.avgColour,
+    centreColour = _require.centreColour;
 
-var opts = {
-  width: 300,
-  height: 300,
-  rows: 3,
-  columns: 3,
-  waveform: "square",
-  filter: "bandpass"
+var model = require("./model"); // debug!!
+
+
+model.listen(function (x) {
+  console.log("Model change", x);
+});
+
+var getCollator = function getCollator() {
+  return model.collator = "centre" ? centreColour : avgColour;
 };
 
 window.onload = function () {
-  connectCamera(opts, function (err, video) {
+  connectCamera(function (err, video) {
     if (err) {// TODO
     } else {
       document.body.className = "started";
-      var audioGraph = createAudioGraph(opts);
-      var sourceCtx = canvasContext("#copy", opts);
-      var targetCtx = canvasContext("#target", opts);
-      var getColours = getColoursFactory(sourceCtx, opts);
-      var fillBox = fillBoxFactory(targetCtx, opts);
-      var updateAudioGraph = updateAudioGraphFactory(audioGraph, opts);
-      connectListeners(opts);
+      var audioGraph = createAudioGraph(model);
+      var getColours = getColoursFactory("#copy", video);
+      var fillBox = fillBoxFactory("#target");
+
+      var _updateAudioGraphFact = updateAudioGraphFactory(audioGraph, model),
+          updateColours = _updateAudioGraphFact.updateColours;
+
+      connectListeners(model);
       audioGraph.start();
-      this.running = setInterval(function () {
-        sourceCtx.drawImage(video, 0, 0, opts.width, opts.height);
-        var colours = getColours(avgColourCollator);
+      setInterval(function () {
+        var colours = getColours(getCollator());
         fillBox(colours);
-        updateAudioGraph(colours);
-      }, 40);
+        updateColours(colours);
+      }, 1000); // during dev, keep this high
     }
   });
 };
 
-},{"./canvas-context":2,"./collators/avg-colour":3,"./connect-camera":4,"./connect-listeners":5,"./create-audio-graph":6,"./fill-box":7,"./get-colours":8,"./update-audio-graph":9}],2:[function(require,module,exports){
+},{"./collators":5,"./connect-camera":6,"./connect-listeners":7,"./create-audio-graph":9,"./fill-box":10,"./get-colours":11,"./model":12,"./update-audio-graph":13}],2:[function(require,module,exports){
 "use strict";
 
-module.exports = function (selector, opts) {
-  var width = opts.width,
-      height = opts.height;
+var _require = require('./constants'),
+    width = _require.width,
+    height = _require.height;
+
+module.exports = function (selector) {
   var canvas = document.querySelector(selector);
   canvas.width = width;
   canvas.height = height;
   return canvas.getContext("2d");
 };
 
-},{}],3:[function(require,module,exports){
+},{"./constants":8}],3:[function(require,module,exports){
 "use strict";
 
 module.exports = function avgColourCollator(data) {
@@ -90,15 +94,41 @@ module.exports = function avgColourCollator(data) {
 },{}],4:[function(require,module,exports){
 "use strict";
 
-module.exports = function connectCamera(opts, callback) {
+module.exports = function centreColourCollator(data) {
+  var dataPerPixel = 4;
+  var length = data.data.length;
+  var i = Math.floor(length / dataPerPixel / 2) * dataPerPixel;
+  return {
+    r: data.data[i],
+    g: data.data[i + 1],
+    b: data.data[i + 2]
+  };
+};
+
+},{}],5:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+  avgColour: require('./avg-colour'),
+  centreColour: require('./centre-colour')
+};
+
+},{"./avg-colour":3,"./centre-colour":4}],6:[function(require,module,exports){
+"use strict";
+
+var _require = require('./constants'),
+    width = _require.width,
+    height = _require.height;
+
+module.exports = function connectCamera(callback) {
   var MEDIA_CONSTRAINTS = {
     audio: false,
     video: {
       width: {
-        ideal: opts.width
+        ideal: width
       },
       height: {
-        ideal: opts.height
+        ideal: height
       }
     }
   };
@@ -121,54 +151,126 @@ module.exports = function connectCamera(opts, callback) {
   }
 };
 
-},{}],5:[function(require,module,exports){
+},{"./constants":8}],7:[function(require,module,exports){
 "use strict";
 
-module.exports = function connectListeners(opts) {
-  function filterTypeChange(evt) {
-    opts.filter = evt.target.value;
+function connectRadioValue(model, radioName) {
+  model.register(radioName);
+  var radios = document.querySelectorAll("input[name=\"".concat(radioName, "\"]"));
+
+  var radioValue = function radioValue(evt) {
+    model[radioName] = evt.target.value;
+  };
+
+  for (var i = 0; i < radios.length; i++) {
+    radios[i].onclick = radioValue;
   }
 
-  function oscillatorTypeChange(evt) {
-    opts.waveform = evt.target.value;
-  }
+  radios[0].click();
+}
 
-  var oscillatorTypeRadios = document.querySelectorAll('input[name="oscillatorType"]');
+function connectRotatingValue(model, buttonId, items) {
+  model.register(buttonId);
+  var element = document.querySelector("#" + buttonId);
+  var index = -1;
 
-  for (var i = 0; i < oscillatorTypeRadios.length; i++) {
-    oscillatorTypeRadios[i].onclick = oscillatorTypeChange;
-  }
+  var rotatingValue = function rotatingValue() {
+    index = (index + 1) % items.length;
+    model[buttonId] = items[index];
+    element.value = items[index];
+  };
 
-  oscillatorTypeRadios[0].click();
-  var filterTypeRadios = document.querySelectorAll('input[name="filterType"]');
+  element.onclick = rotatingValue;
+  element.click();
+}
 
-  for (var _i = 0; _i < filterTypeRadios.length; _i++) {
-    filterTypeRadios[_i].onclick = filterTypeChange;
-  }
-
-  filterTypeRadios[0].click();
+module.exports = function connectListeners(model, audioGraph) {
+  connectRadioValue(model, "oscillatorType");
+  connectRadioValue(model, "filterType");
+  var colourOrder = ["r", "g", "b"];
+  connectRotatingValue(model, "oscillatorColour", colourOrder);
+  connectRotatingValue(model, "filterColour", colourOrder);
+  connectRotatingValue(model, "resonanceColour", colourOrder);
+  var collatorOrder = ["avg", "centre"];
+  connectRotatingValue(model, "collator", collatorOrder);
+  var ringModOrder = ["off", "horizontal", "vertical"];
+  connectRotatingValue(model, "ringMod", ringModOrder);
+  var offOn = ["off", "on"];
+  connectRotatingValue(model, "pitchRow", offOn);
+  connectRotatingValue(model, "connected", offOn);
 };
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
-module.exports = function createAudioGraph(opts) {
-  var waveform = opts.waveform,
-      filter = opts.filter;
-  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  var oscillators = new Array(9);
-  var filters = new Array(9);
-  var gains = new Array(9);
+module.exports = {
+  width: 300,
+  height: 300,
+  rows: 3,
+  columns: 3
+};
 
-  for (var index = 0; index < 9; index++) {
-    oscillators[index] = audioCtx.createOscillator();
-    oscillators[index].type = waveform;
-    filters[index] = audioCtx.createBiquadFilter();
-    filters[index].type = filter;
+},{}],9:[function(require,module,exports){
+"use strict";
+
+var _require = require('./constants'),
+    rows = _require.rows,
+    columns = _require.columns;
+
+var asIndex = function asIndex(row, col) {
+  return row * columns + col;
+};
+
+var asRowCol = function asRowCol(index) {
+  return {
+    row: Math.floor(index / columns),
+    col: index % columns
+  };
+};
+
+module.exports = function createAudioGraph(model) {
+  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  var total = rows * columns;
+  var oscillators = new Array(total);
+  var filters = new Array(total);
+  var gains = new Array(total);
+
+  for (var index = 0; index < total; index++) {
     gains[index] = audioCtx.createGain();
-    oscillators[index].connect(filters[index]);
+    filters[index] = audioCtx.createBiquadFilter();
     filters[index].connect(gains[index]);
-    gains[index].connect(audioCtx.destination);
+    oscillators[index] = audioCtx.createOscillator();
+    oscillators[index].connect(filters[index]);
+  }
+
+  function rewireNoRingMod() {
+    for (var _index = 0; _index < total; _index++) {
+      gains[_index].connect(audioCtx.destination);
+
+      gains[_index].gain.value = 1;
+    }
+  }
+
+  function rewireHorizontalRingMod(enable) {
+    for (var y = 0; y < rows; y++) {
+      for (var x = 1; x < columns; x++) {
+        var thisGain = gains[asIndex(y, x)];
+        var previousGain = gains[asIndex(y, x - 1)];
+        previousGain.disconnect(enable ? audioCtx.destination : thisGain.gain);
+        previousGain.connect(enable ? thisGain.gain : audioCtx.destination);
+      }
+    }
+  }
+
+  function rewireVerticalRingMod(enable) {
+    for (var x = 0; x < columns; x++) {
+      for (var y = 1; y < rows; y++) {
+        var thisGain = gains[asIndex(y, x)];
+        var previousGain = gains[asIndex(y - 1, x)];
+        previousGain.disconnect(enable ? audioCtx.destination : thisGain.gain);
+        previousGain.connect(enable ? thisGain.gain : audioCtx.destination);
+      }
+    }
   }
 
   function start() {
@@ -177,6 +279,34 @@ module.exports = function createAudioGraph(opts) {
     });
   }
 
+  var currentRingMod = rewireNoRingMod;
+  currentRingMod(true);
+  model.listen(function (_ref) {
+    var field = _ref.field,
+        value = _ref.value;
+
+    if (field === "oscillatorType") {
+      oscillators.forEach(function (o) {
+        o.type = value;
+      });
+    } else if (field === "filterType") {
+      filters.forEach(function (f) {
+        f.type = value;
+      });
+    } else if (field === "ringMod") {
+      currentRingMod(false);
+
+      if (value === "off") {
+        currentRingMod = rewireNoRingMod;
+      } else if (value === "horizontal") {
+        currentRingMod = rewireHorizontalRingMod;
+      } else if (value === "vertical") {
+        currentRingMod = rewireVerticalRingMod;
+      }
+
+      currentRingMod(true);
+    }
+  });
   return {
     audioCtx: audioCtx,
     oscillators: oscillators,
@@ -186,14 +316,19 @@ module.exports = function createAudioGraph(opts) {
   };
 };
 
-},{}],7:[function(require,module,exports){
+},{"./constants":8}],10:[function(require,module,exports){
 "use strict";
 
-module.exports = function fillBox(targetCtx, opts) {
-  var rows = opts.rows,
-      columns = opts.columns,
-      width = opts.width,
-      height = opts.height;
+var _require = require('./constants'),
+    rows = _require.rows,
+    columns = _require.columns,
+    width = _require.width,
+    height = _require.height;
+
+var canvasContext = require("./canvas-context");
+
+module.exports = function fillBox(targetSelector) {
+  var targetCtx = canvasContext(targetSelector);
   var boxWidth = width / columns;
   var boxHeight = height / rows;
   return function (boxColours) {
@@ -214,17 +349,23 @@ module.exports = function fillBox(targetCtx, opts) {
   };
 };
 
-},{}],8:[function(require,module,exports){
+},{"./canvas-context":2,"./constants":8}],11:[function(require,module,exports){
 "use strict";
 
-module.exports = function getColours(sourceCtx, opts) {
-  var rows = opts.rows,
-      columns = opts.columns,
-      width = opts.width,
-      height = opts.height;
+var _require = require('./constants'),
+    rows = _require.rows,
+    columns = _require.columns,
+    width = _require.width,
+    height = _require.height;
+
+var canvasContext = require("./canvas-context");
+
+module.exports = function getColours(sourceSelector, video) {
+  var sourceCtx = canvasContext(sourceSelector);
   var boxWidth = width / columns;
   var boxHeight = height / rows;
   return function (collator) {
+    sourceCtx.drawImage(video, 0, 0, width, height);
     var boxColours = new Array(rows * columns);
 
     for (var boxY = 0; boxY < rows; boxY++) {
@@ -241,7 +382,47 @@ module.exports = function getColours(sourceCtx, opts) {
   };
 };
 
-},{}],9:[function(require,module,exports){
+},{"./canvas-context":2,"./constants":8}],12:[function(require,module,exports){
+"use strict";
+
+var listeners = [];
+var model = {};
+/* sample model
+
+collator: "avg" <-- done
+connected: "off"
+filterColour: "red" <-- done
+​filterType: "allpass" <-- done
+​oscillatorColour: "red" <-- done
+​oscillatorType: "sine" <-- done
+​pitchRow: "off"
+​resonanceColour: "red" <-- done
+​ringMod: "off" <-- done;
+​*/
+
+module.exports = {
+  register: function register(field) {
+    Object.defineProperty(wrapper, field, {
+      set: function set(value) {
+        model[field] = value;
+        listeners.forEach(function (l) {
+          return l({
+            field: field,
+            value: value
+          });
+        });
+      },
+      get: function get() {
+        return model[field];
+      }
+    });
+  },
+  listen: function listen(listener) {
+    listeners.push(listener);
+  }
+};
+
+},{}],13:[function(require,module,exports){
 "use strict";
 
 function scale(colour) {
@@ -261,31 +442,24 @@ function q(colour) {
   return 0.5 + colour / 512;
 }
 
-module.exports = function (audioGraph, opts) {
+module.exports = function (audioGraph, model) {
   var audioCtx = audioGraph.audioCtx,
       oscillators = audioGraph.oscillators,
       filters = audioGraph.filters;
-  return function (colours) {
+
+  function updateColours(colours) {
     colours.forEach(function (colour, index) {
-      var r = colour.r,
-          g = colour.g,
-          b = colour.b;
       var x = index % 3;
       var y = Math.floor(index / 3);
-
-      if (oscillators[index].type !== opts.waveform) {
-        oscillators[index].type = opts.waveform;
-      }
-
-      oscillators[index].frequency.setTargetAtTime(oscFreq(r, x), audioCtx.currentTime, 0.1);
-
-      if (filters[index].type !== opts.filter) {
-        filters[index].type = opts.filter;
-      }
-
-      filters[index].frequency.setTargetAtTime(cutoffFreq(g), audioCtx.currentTime, 0.1);
-      filters[index].Q.setTargetAtTime(q(b), audioCtx.currentTime, 0.1);
+      oscillators[index].frequency.setTargetAtTime(oscFreq(colour[model.oscillatorColour], x), audioCtx.currentTime, 0.1);
+      filters[index].frequency.setTargetAtTime(cutoffFreq(colour[model.filterColour]), audioCtx.currentTime, 0.1);
+      filters[index].Q.setTargetAtTime(q(colour[model.resonanceColour]), audioCtx.currentTime, 0.1);
     });
+  } // TODO model.connected && model.pitchRow
+
+
+  return {
+    updateColours: updateColours
   };
 };
 

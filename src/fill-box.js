@@ -1,14 +1,17 @@
-module.exports = function fillBox(targetCtx, opts) {
-  const { rows, columns, width, height } = opts;
+const { rows, columns, width, height, asIndex } = require("./constants");
+const canvasContext = require("./canvas-context");
+
+module.exports = function fillBox(targetSelector) {
+  const targetCtx = canvasContext(targetSelector);
   const boxWidth = width / columns;
   const boxHeight = height / rows;
 
   return boxColours => {
-    for (let boxY = 0; boxY < rows; boxY++) {
-      for (let boxX = 0; boxX < columns; boxX++) {
-        const startX = boxX * boxWidth;
-        const startY = boxY * boxHeight;
-        const colour = boxColours[rows * boxY + boxX];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
+        const startX = col * boxWidth;
+        const startY = row * boxHeight;
+        const colour = boxColours[asIndex(row, col)];
 
         const { r, g, b } = colour;
         const rgb = `rgb(${Math.floor(r)},${Math.floor(g)},${Math.floor(b)})`;
