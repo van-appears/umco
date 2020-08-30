@@ -9,8 +9,8 @@ module.exports = function getColours(sourceSelector, video) {
   return collator => {
     sourceCtx.drawImage(video, 0, 0, width, height);
     const boxColours = new Array(total);
-    for (let row = 0; row < rows; boxY++) {
-      for (let col = 0; col < columns; boxX++) {
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
         const startX = col * boxWidth;
         const startY = row * boxHeight;
         const data = sourceCtx.getImageData(

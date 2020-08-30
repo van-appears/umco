@@ -1,5 +1,6 @@
 const listeners = [];
-const model = {
+
+module.exports = {
   store(field, value) {
     this.field = value;
     listeners.forEach(l => l({ field, value }));
@@ -8,5 +9,3 @@ const model = {
     listeners.push(listener);
   }
 };
-
-module.exports = model;

@@ -8,6 +8,7 @@ module.exports = {
   total,
   width: 300,
   height: 300,
+  lowFreq: 80,
   asIndex(row, col) {
     return row * columns + col;
   },

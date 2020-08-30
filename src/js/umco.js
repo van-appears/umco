@@ -9,14 +9,15 @@ const { avgColour, centreColour } = require("./collators");
 window.onload = function () {
   connectCamera(function (err, video) {
     if (err) {
-      // TODO
+      document.querySelector(".info").innerHTML =
+        "Failed to connect to camera: " + err.message;
     } else {
       document.body.className = "started";
       const model = connectListeners();
       const audioGraph = createAudioGraph(model);
       const getColours = getColoursFactory("#copy", video);
       const fillBox = fillBoxFactory("#target");
-      const { updateColours } = updateAudioGraphFactory(audioGraph, model);
+      const updateColours = updateAudioGraphFactory(audioGraph, model);
 
       // debug!!
       model.listen(x => {
@@ -27,7 +28,7 @@ window.onload = function () {
 
       setInterval(function () {
         const collator = (model.collator = "centre" ? centreColour : avgColour);
-        const colours = getColours(getCollator());
+        const colours = getColours(collator);
         fillBox(colours);
         updateColours(colours);
       }, 1000); // during dev, keep this high

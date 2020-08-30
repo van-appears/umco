@@ -1,8 +1,7 @@
-const { rows, columns, asIndex } = require("./constants");
+const { rows, columns, total, asIndex } = require("./constants");
 
 module.exports = function createAudioGraph(model) {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const total = rows * columns;
 
   const oscillators = new Array(total);
   const filters = new Array(total);

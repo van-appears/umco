@@ -1,4 +1,5 @@
 const { width, height } = require("./constants");
+
 module.exports = function connectCamera(callback) {
   const MEDIA_CONSTRAINTS = {
     audio: false,
