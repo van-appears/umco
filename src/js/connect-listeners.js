@@ -13,7 +13,7 @@ function connectRadioValue(radioName) {
 
 function connectRotatingValue(buttonId, items) {
   const element = document.querySelector("#" + buttonId);
-  let index = -1;
+  let index = items.findIndex(x => x === element.value) - 1;
   const rotatingValue = function () {
     index = (index + 1) % items.length;
     model.store(buttonId, items[index]);

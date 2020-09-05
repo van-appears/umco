@@ -2,9 +2,8 @@
 UserMedia Controlled Oscillations (look, bascially a browser-based webcam-driven synth)
 
 TODO
-change startup colours to r,g,b
-add h,s,b
+add h,s,b icons
 icon alignment
-missing options
 q tuning
-connected pitches / connected cutoff
+what's that crackle?
+external link to source?

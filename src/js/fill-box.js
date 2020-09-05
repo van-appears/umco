@@ -13,8 +13,7 @@ module.exports = function fillBox(targetSelector) {
         const startY = row * boxHeight;
         const colour = boxColours[asIndex(row, col)];
 
-        const { r, g, b } = colour;
-        const rgb = `rgb(${Math.floor(r)},${Math.floor(g)},${Math.floor(b)})`;
+        const { rgb } = colour;
         targetCtx.fillStyle = rgb;
         targetCtx.fillRect(startX, startY, boxWidth, boxHeight);
         targetCtx.fill();

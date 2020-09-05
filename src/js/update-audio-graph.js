@@ -1,8 +1,7 @@
 const { rows, columns, asIndex, total, lowFreq } = require("./constants");
 
 function scale(colour, scalar = 1) {
-  const scaled = colour / 256;
-  return Math.pow(Math.pow(2.0, scalar), scaled);
+  return Math.pow(Math.pow(2.0, scalar), colour);
 }
 
 function oscFreq(colour, row) {
@@ -16,11 +15,11 @@ function cutoffFreq(colour) {
 }
 
 function q(colour) {
-  return 0.5 + colour / 512;
+  return 0.5 + (colour / 2);
 }
 
 function relative(colour) {
-  return 1.0 + (colour - 128) / 1280;
+  return 1.0 + (colour - 0.5) / 5;
 }
 
 module.exports = function (audioGraph, model) {
