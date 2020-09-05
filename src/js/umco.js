@@ -27,7 +27,7 @@ window.onload = function () {
       audioGraph.start();
 
       setInterval(function () {
-        const collator = (model.collator === "centre" ? centreColour : avgColour);
+        const collator = model.collator === "centre" ? centreColour : avgColour;
         const colours = getColours(collator);
         fillBox(colours);
         updateAudioGraph(colours);

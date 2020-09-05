@@ -1,2 +1,2 @@
-import './js/umco.js'
-import './css/umco.css'
+import "./js/umco.js";
+import "./css/umco.css";

@@ -1,6 +1,6 @@
 const { rows, columns, asIndex, total, lowFreq } = require("./constants");
 
-function scale(colour, scalar=1) {
+function scale(colour, scalar = 1) {
   const scaled = colour / 256;
   return Math.pow(Math.pow(2.0, scalar), scaled);
 }
@@ -20,7 +20,7 @@ function q(colour) {
 }
 
 function relative(colour) {
-  return 1.0 + ((colour - 128) / 1280);
+  return 1.0 + (colour - 128) / 1280;
 }
 
 module.exports = function (audioGraph, model) {
@@ -43,9 +43,10 @@ module.exports = function (audioGraph, model) {
             model.pitchRow === "on" ? row : null
           );
 
-          oscillatorFreq = centreIndex === index
-            ? relativeTo
-            : relativeTo * relative(colour[model.oscillatorColour]);
+          oscillatorFreq =
+            centreIndex === index
+              ? relativeTo
+              : relativeTo * relative(colour[model.oscillatorColour]);
         } else {
           oscillatorFreq = oscFreq(
             colour[model.oscillatorColour],

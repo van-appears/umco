@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
     "build": "webpack",
-    "prettier": "node_modules/.bin/prettier --write server.js src/**"
+    "prettier": "node_modules/.bin/prettier --write src/css/** src/js/** src/index*"
   },
   "repository": {
     "type": "git",
