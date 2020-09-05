@@ -17,7 +17,7 @@ window.onload = function () {
       const audioGraph = createAudioGraph(model);
       const getColours = getColoursFactory("#copy", video);
       const fillBox = fillBoxFactory("#target");
-      const updateColours = updateAudioGraphFactory(audioGraph, model);
+      const updateAudioGraph = updateAudioGraphFactory(audioGraph, model);
 
       // debug!!
       model.listen(x => {
@@ -27,11 +27,11 @@ window.onload = function () {
       audioGraph.start();
 
       setInterval(function () {
-        const collator = (model.collator = "centre" ? centreColour : avgColour);
+        const collator = (model.collator === "centre" ? centreColour : avgColour);
         const colours = getColours(collator);
         fillBox(colours);
-        updateColours(colours);
-      }, 1000); // during dev, keep this high
+        updateAudioGraph(colours);
+      }, 100);
     }
   });
 };

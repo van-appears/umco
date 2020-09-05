@@ -54,39 +54,39 @@ label {
   background-repeat: no-repeat;
 }
 
-#oscillatorColour[value="red"] + label {
+#oscillatorColour[value="r"] + label {
   background-position: 0 0;
 }
 
-#oscillatorColour[value="green"] + label {
+#oscillatorColour[value="g"] + label {
   background-position: -32px 0;
 }
 
-#oscillatorColour[value="blue"] + label {
+#oscillatorColour[value="b"] + label {
   background-position: -64px 0;
 }
 
-#filterColour[value="red"] + label {
+#filterColour[value="r"] + label {
   background-position: 0 -32px;
 }
 
-#filterColour[value="green"] + label {
+#filterColour[value="g"] + label {
   background-position: -32px -32px;
 }
 
-#filterColour[value="blue"] + label {
+#filterColour[value="b"] + label {
   background-position: -64px -32px;
 }
 
-#resonanceColour[value="red"] + label {
+#resonanceColour[value="r"] + label {
   background-position: -96px 0;
 }
 
-#resonanceColour[value="green"] + label {
+#resonanceColour[value="g"] + label {
   background-position: -128px 0;
 }
 
-#resonanceColour[value="blue"] + label {
+#resonanceColour[value="b"] + label {
   background-position: -160px 0;
 }
 

@@ -1,6 +1,6 @@
 const { rows, columns, asIndex, total, lowFreq } = require("./constants");
 
-function scale(colour, scalar) {
+function scale(colour, scalar=1) {
   const scaled = colour / 256;
   return Math.pow(Math.pow(2.0, scalar), scaled);
 }
@@ -12,18 +12,19 @@ function oscFreq(colour, row) {
 }
 
 function cutoffFreq(colour) {
-  //return 500 * scale(colour);
-  return 500; // TODO
+  return 500 * scale(colour);
 }
 
 function q(colour) {
-  //return 0.5 + colour / 512;
-  return 1; // TODO
+  return 0.5 + colour / 512;
+}
+
+function relative(colour) {
+  return 1.0 + ((colour - 128) / 1280);
 }
 
 module.exports = function (audioGraph, model) {
   const { audioCtx, oscillators, filters } = audioGraph;
-  // TODO model.pitchRow
 
   return colours => {
     for (let row = 0; row < rows; row++) {
@@ -41,17 +42,16 @@ module.exports = function (audioGraph, model) {
             colours[centreIndex][model.oscillatorColour],
             model.pitchRow === "on" ? row : null
           );
+
           oscillatorFreq = centreIndex === index
             ? relativeTo
-            : relativeTo; // TODO...
+            : relativeTo * relative(colour[model.oscillatorColour]);
         } else {
           oscillatorFreq = oscFreq(
             colour[model.oscillatorColour],
             model.pitchRow === "on" ? row : null
           );
         }
-
-        oscillatorFreq = 100; // TODO
 
         oscillators[index].frequency.setTargetAtTime(
           oscillatorFreq,
