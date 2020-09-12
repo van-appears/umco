@@ -5,8 +5,8 @@ body {
   font-family: "Arial", "Helvetica", sans-serif;
   height: 100%;
   width: 100%;
-  background: #efefef;
-  overscroll-behavior-y: contain;
+  background: #ddd;
+  overflow-y: hidden;
 }
 
 body {
@@ -35,6 +35,13 @@ input[type="radio"] {
   display: inline;
 }
 
+.wrapper {
+  display: inline-block;
+  background: #ffffff;
+  width: 300px;
+  padding: 20px;
+}
+
 button + label,
 input[type="radio"] + label {
   border-radius: 3px;
@@ -43,7 +50,8 @@ input[type="radio"] + label {
   border-color: black;
 }
 
-label {
+label,
+a.sourceCode {
   display: inline-block;
   cursor: pointer;
   outline: 0;
@@ -52,6 +60,13 @@ label {
   text-indent: -99999px;
   background-image: url(../img/icons.png);
   background-repeat: no-repeat;
+}
+
+a.sourceCode {
+  background-position: -288px -32px;
+  position: relative;
+  left: -38px;
+  bottom: -58px;
 }
 
 #oscillatorColour[value="r"] + label {
@@ -66,6 +81,18 @@ label {
   background-position: -64px 0;
 }
 
+#oscillatorColour[value="h"] + label {
+  background-position: -96px 0;
+}
+
+#oscillatorColour[value="s"] + label {
+  background-position: -128px 0;
+}
+
+#oscillatorColour[value="v"] + label {
+  background-position: -160px 0;
+}
+
 #filterColour[value="r"] + label {
   background-position: 0 -32px;
 }
@@ -78,52 +105,76 @@ label {
   background-position: -64px -32px;
 }
 
-#resonanceColour[value="r"] + label {
-  background-position: -96px 0;
-}
-
-#resonanceColour[value="g"] + label {
-  background-position: -128px 0;
-}
-
-#resonanceColour[value="b"] + label {
-  background-position: -160px 0;
-}
-
-#ringMod[value="off"] + label {
+#filterColour[value="h"] + label {
   background-position: -96px -32px;
 }
 
-#ringMod[value="horizontal"] + label {
+#filterColour[value="s"] + label {
   background-position: -128px -32px;
 }
 
-#ringMod[value="vertical"] + label {
+#filterColour[value="v"] + label {
   background-position: -160px -32px;
 }
 
+#resonanceColour[value="r"] + label {
+  background-position: -192px 0;
+}
+
+#resonanceColour[value="g"] + label {
+  background-position: -224px 0;
+}
+
+#resonanceColour[value="b"] + label {
+  background-position: -256px 0;
+}
+
+#resonanceColour[value="h"] + label {
+  background-position: -288px 0;
+}
+
+#resonanceColour[value="s"] + label {
+  background-position: -320px 0;
+}
+
+#resonanceColour[value="v"] + label {
+  background-position: -352px 0;
+}
+
+#ringMod[value="off"] + label {
+  background-position: -192px -32px;
+}
+
+#ringMod[value="horizontal"] + label {
+  background-position: -224px -32px;
+}
+
+#ringMod[value="vertical"] + label {
+  background-position: -256px -32px;
+}
+
 #collator[value="avg"] + label {
-  background-position: -480px 0;
+  background-position: -672px 0;
 }
 
 #collator[value="centre"] + label {
-  background-position: -480px -32px;
+  background-position: -672px -32px;
 }
 
 #pitchRow[value="off"] + label {
-  background-position: -512px 0;
+  background-position: -704px 0;
 }
 
 #pitchRow[value="on"] + label {
-  background-position: -512px -32px;
+  background-position: -704px -32px;
 }
 
 #connected[value="off"] + label {
-  background-position: -448px 0;
+  background-position: -640px 0;
 }
 
 #connected[value="on"] + label {
-  background-position: -448px -32px;
+  background-position: -640px -32px;
 }
 
 label[for="filter"] {
@@ -159,35 +210,35 @@ label[for="connected"] {
 }
 
 label[for="sine"] {
-  background-position: -192px 0;
-}
-
-label[for="sawtooth"] {
-  background-position: -224px 0;
-}
-
-label[for="triangle"] {
-  background-position: -256px 0;
-}
-
-label[for="square"] {
-  background-position: -288px 0;
-}
-
-label[for="allpass"] {
-  background-position: -320px 0;
-}
-
-label[for="highpass"] {
-  background-position: -352px 0;
-}
-
-label[for="lowpass"] {
   background-position: -384px 0;
 }
 
-label[for="bandpass"] {
+label[for="sawtooth"] {
   background-position: -416px 0;
+}
+
+label[for="triangle"] {
+  background-position: -448px 0;
+}
+
+label[for="square"] {
+  background-position: -480px 0;
+}
+
+label[for="allpass"] {
+  background-position: -512px 0;
+}
+
+label[for="highpass"] {
+  background-position: -544px 0;
+}
+
+label[for="lowpass"] {
+  background-position: -576px 0;
+}
+
+label[for="bandpass"] {
+  background-position: -608px 0;
 }
 
 input[type="radio"]:checked + label {

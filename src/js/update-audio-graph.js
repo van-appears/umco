@@ -15,7 +15,7 @@ function cutoffFreq(colour) {
 }
 
 function q(colour) {
-  return 0.5 + (colour / 2);
+  return 0.5 + colour / 2;
 }
 
 function relative(colour) {

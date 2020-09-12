@@ -17,7 +17,7 @@ module.exports = function createAudioGraph(model) {
   function rewireNoRingMod() {
     for (let index = 0; index < total; index++) {
       gains[index].connect(audioCtx.destination);
-      gains[index].gain.value = 1;
+      gains[index].gain.value = 0.1;
     }
   }
 

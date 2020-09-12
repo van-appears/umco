@@ -27,7 +27,7 @@ module.exports = function connectListeners() {
   connectRadioValue("oscillatorType");
   connectRadioValue("filterType");
 
-  const colourOrder = ["r", "g", "b"];
+  const colourOrder = ["r", "g", "b", "h", "s", "v"];
   connectRotatingValue("oscillatorColour", colourOrder);
   connectRotatingValue("filterColour", colourOrder);
   connectRotatingValue("resonanceColour", colourOrder);

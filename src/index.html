@@ -9,59 +9,81 @@
     />
   </head>
   <body>
-    <video id="video"></video>
-    <div class="display">
-      <canvas id="copy"></canvas>
-      <canvas id="target"></canvas>
+    <div class="wrapper">
+      <video id="video"></video>
+      <div class="display">
+        <canvas id="copy"></canvas>
+        <canvas id="target"></canvas>
+      </div>
+      <div class="info">Play will begin when the webcam use is allowed</div>
+      <div class="controls">
+        <div class="oscillatorControls">
+          <button id="oscillatorColour" value="r"></button>
+          <label for="oscillatorColour" title="Oscillator frequency"></label>
+          <input id="sine" type="radio" name="oscillatorType" value="sine" />
+          <label for="sine" title="Sine"></label>
+          <input
+            id="sawtooth"
+            type="radio"
+            name="oscillatorType"
+            value="sawtooth"
+          />
+          <label for="sawtooth" title="Sawtooth"></label>
+          <input
+            id="triangle"
+            type="radio"
+            name="oscillatorType"
+            value="triangle"
+          />
+          <label for="triangle" title="Triangle"></label>
+          <input
+            id="square"
+            type="radio"
+            name="oscillatorType"
+            value="square"
+          />
+          <label for="square" title="Square"></label>
+        </div>
+        <div class="filterControls">
+          <button id="filterColour" value="g"></button>
+          <label for="filterColour" title="Filter cutoff"></label>
+          <input id="allpass" type="radio" name="filterType" value="allpass" />
+          <label for="allpass" title="None"></label>
+          <input id="lowpass" type="radio" name="filterType" value="lowpass" />
+          <label for="lowpass" title="Low pass"></label>
+          <input
+            id="highpass"
+            type="radio"
+            name="filterType"
+            value="highpass"
+          />
+          <label for="highpass" title="High pass"></label>
+          <input
+            id="bandpass"
+            type="radio"
+            name="filterType"
+            value="bandpass"
+          />
+          <label for="bandpass" title="Band pass"></label>
+          <button id="resonanceColour" value="b"></button>
+          <label for="resonanceColour" title="Filter resonance"></label>
+        </div>
+        <div class="connectionControls">
+          <button id="ringMod" value="off"></button>
+          <label for="ringMod" title="Ring mod"></label>
+          <button id="collator" value="avg"></button>
+          <label for="collator" title="Collator"></label>
+          <button id="pitchRow" value="off"></button>
+          <label for="pitchRow" title="Pitch Row"></label>
+          <button id="connected" value="off"></button>
+          <label for="connected" title="Connect Oscillators"></label>
+        </div>
+      </div>
     </div>
-    <div class="info">Play will begin when the webcam use is allowed</div>
-    <div class="controls">
-      <div class="oscillatorControls">
-        <button id="oscillatorColour" value="r"></button>
-        <label for="oscillatorColour" title="Oscillator frequency"></label>
-        <input id="sine" type="radio" name="oscillatorType" value="sine" />
-        <label for="sine" title="Sine"></label>
-        <input
-          id="sawtooth"
-          type="radio"
-          name="oscillatorType"
-          value="sawtooth"
-        />
-        <label for="sawtooth" title="Sawtooth"></label>
-        <input
-          id="triangle"
-          type="radio"
-          name="oscillatorType"
-          value="triangle"
-        />
-        <label for="triangle" title="Triangle"></label>
-        <input id="square" type="radio" name="oscillatorType" value="square" />
-        <label for="square" title="Square"></label>
-      </div>
-      <div class="filterControls">
-        <button id="filterColour" value="g"></button>
-        <label for="filterColour" title="Filter cutoff"></label>
-        <input id="allpass" type="radio" name="filterType" value="allpass" />
-        <label for="allpass" title="None"></label>
-        <input id="lowpass" type="radio" name="filterType" value="lowpass" />
-        <label for="lowpass" title="Low pass"></label>
-        <input id="highpass" type="radio" name="filterType" value="highpass" />
-        <label for="highpass" title="High pass"></label>
-        <input id="bandpass" type="radio" name="filterType" value="bandpass" />
-        <label for="bandpass" title="Band pass"></label>
-        <button id="resonanceColour" value="b"></button>
-        <label for="resonanceColour" title="Filter resonance"></label>
-      </div>
-      <div class="connectionControls">
-        <button id="ringMod" value="off"></button>
-        <label for="ringMod" title="Ring mod"></label>
-        <button id="collator" value="avg"></button>
-        <label for="collator" title="Collator"></label>
-        <button id="pitchRow" value="off"></button>
-        <label for="pitchRow" title="pitchRow"></label>
-        <button id="connected" value="off"></button>
-        <label for="connected" title="Connect Oscillators"></label>
-      </div>
-    </div>
+    <a
+      class="sourceCode"
+      href="https://github.com/van-appears/umco#readme"
+      target="_blank"
+    ></a>
   </body>
 </html>
