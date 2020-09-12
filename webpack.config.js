@@ -3,7 +3,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV || 'development',
   entry: {
     app: './src/index.js',
   },
@@ -25,8 +25,7 @@ module.exports = {
       {
         test: /\.html$/,
         use: {
-          loader: 'html-loader',
-          options: { minimize: !isDevelopment }
+          loader: 'html-loader'
         }
       },
       {
