@@ -12,7 +12,7 @@ module.exports = function getColours(sourceSelector, video) {
     const boxColours = new Array(total);
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < columns; col++) {
-        const startX = col * boxWidth;
+        const startX = (columns - 1 - col) * boxWidth;
         const startY = row * boxHeight;
         const data = sourceCtx.getImageData(
           startX,

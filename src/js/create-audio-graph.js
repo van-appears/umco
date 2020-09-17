@@ -17,12 +17,13 @@ module.exports = function createAudioGraph(model) {
   function rewireNoRingMod() {
     for (let index = 0; index < total; index++) {
       gains[index].connect(audioCtx.destination);
-      gains[index].gain.value = 0.1;
+      gains[index].gain.value = 1.0 / total;
     }
   }
 
   function rewireHorizontalRingMod(enable) {
     for (let y = 0; y < rows; y++) {
+      gains[asIndex(y, 0)].gain.value = 1.0 / rows;
       for (let x = 1; x < columns; x++) {
         const thisGain = gains[asIndex(y, x)];
         const previousGain = gains[asIndex(y, x - 1)];
@@ -34,6 +35,7 @@ module.exports = function createAudioGraph(model) {
 
   function rewireVerticalRingMod(enable) {
     for (let x = 0; x < columns; x++) {
+      gains[asIndex(0, x)].gain.value = 1.0 / columns;
       for (let y = 1; y < rows; y++) {
         const thisGain = gains[asIndex(y, x)];
         const previousGain = gains[asIndex(y - 1, x)];
