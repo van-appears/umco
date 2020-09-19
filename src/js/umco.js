@@ -19,11 +19,6 @@ window.onload = function () {
       const fillBox = fillBoxFactory("#target");
       const updateAudioGraph = updateAudioGraphFactory(audioGraph, model);
 
-      // debug!!
-      model.listen(x => {
-        console.log("Model change", x);
-      });
-
       audioGraph.start();
 
       setInterval(function () {
