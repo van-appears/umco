@@ -65,16 +65,10 @@ a.sourceCode {
 
 a.home {
   background-position: -736px -32px;
-  position: relative;
-  left: -70px;
-  bottom: -58px;
 }
 
 a.sourceCode {
   background-position: -736px 0;
-  position: relative;
-  left: -70px;
-  bottom: -58px;
 }
 
 #oscillatorColour[value="r"] + label {
